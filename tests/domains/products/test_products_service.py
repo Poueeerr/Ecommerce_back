@@ -38,7 +38,7 @@ async def test_get_by_category_passes_filters_to_repository():
 
     assert result == products
     repository.get_by_category.assert_awaited_once_with(
-        ProductType.CREATINE, 10, 11, Decimal("10.00"), Decimal("50.00")
+        ProductType.CREATINE, 10, 11, Decimal("10.00"), Decimal("50.00"), None
     )
 
 

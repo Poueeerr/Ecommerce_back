@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Request
 from mercadopago.webhook import (
-    WebhookSignatureValidator,
     InvalidWebhookSignatureError,
+    WebhookSignatureValidator,
 )
 
 from core.config import settings
@@ -21,7 +21,7 @@ def validate_mercadopago_signature(request: Request) -> None:
             data_id,
             settings.MERCADO_PAGO_WEBHOOK_SECRET,
         )
-        
+
     except InvalidWebhookSignatureError as exc:
         print("Falha na validação:", repr(exc))
         raise HTTPException(

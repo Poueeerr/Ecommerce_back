@@ -2,7 +2,7 @@ import uuid
 from collections.abc import Sequence
 from datetime import UTC, datetime
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -34,6 +34,7 @@ class ProductsRepository:
         limit: int,
         min_price=None,
         max_price=None,
+        search: str | None = None,
     ) -> Sequence[ProductModel]:
         query = select(ProductModel).options(selectinload(ProductModel.inventory))
 
@@ -45,6 +46,15 @@ class ProductsRepository:
 
         if max_price is not None:
             query = query.where(ProductModel.product_price <= max_price)
+
+        if search:
+            search_term = f"%{search.strip()}%"
+            query = query.where(
+                or_(
+                    ProductModel.product_name.ilike(search_term),
+                    ProductModel.product_description.ilike(search_term),
+                )
+            )
 
         query = query.where(ProductModel.deleted_at.is_(None))
 

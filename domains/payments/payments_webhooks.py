@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Request
 
+from domains.payments.dependencies import get_payments_service
 from domains.payments.services.mercadopago_webhook_service import validate_mercadopago_signature
 from domains.payments.services.payments_service import PaymentsService
-from domains.payments.dependencies import get_payments_service
 
 router = APIRouter()
 

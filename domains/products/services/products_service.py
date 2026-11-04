@@ -35,6 +35,7 @@ class ProductsService:
         limit,
         min_price=None,
         max_price=None,
+        search=None,
     ) -> Sequence[ProductModel]:
         if category and category not in ProductType:
             raise ProductInvalidType()
@@ -44,6 +45,7 @@ class ProductsService:
             limit,
             min_price,
             max_price,
+            search,
         )
         if not products:
             raise ProductNotFound

@@ -60,6 +60,19 @@ class UsersAuthService:
             raise UserNotFound
         return user
 
+    async def update_profile(self, current_user: dict, name: str, email: str) -> UsersModel:
+        user = await self.users_auth_repository.find_by_email(current_user["email"])
+        if user is None:
+            raise UserNotFound
+        existing = await self.users_auth_repository.find_by_email(email)
+        if existing is not None and existing.id != user.id:
+            raise EmailAlreadyRegistered
+        user.name = name
+        user.email = email
+        await self.users_auth_repository.save(user)
+        await self.db.commit()
+        return user
+
     @staticmethod
     async def _encrypt_password(password: str) -> str:
         hashed_password = await to_thread.run_sync(

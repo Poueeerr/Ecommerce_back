@@ -15,3 +15,8 @@ class UsersAuthRepository:
         self.db.add(user)
         await self.db.flush()
         return user
+
+    async def save(self, user: UsersModel) -> UsersModel:
+        self.db.add(user)
+        await self.db.flush()
+        return user

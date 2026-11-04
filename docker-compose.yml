@@ -21,6 +21,9 @@ services:
     container_name: ecommerce_api
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: db
+      RABBITMQ_CONNECTION_URL: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
     ports:
       - "8000:8000"
     volumes:
@@ -50,6 +53,9 @@ services:
     command: python -m domains.orders.consumers.order_consumer
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: db
+      RABBITMQ_CONNECTION_URL: amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
     volumes:
       - .:/app
     depends_on:

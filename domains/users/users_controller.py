@@ -8,6 +8,7 @@ from domains.users.schemas.users_schemas import (
     Token,
     UserLogin,
     UserProfile,
+    UserProfileUpdate,
     UserRegister,
 )
 from domains.users.services.users_auth_service import UsersAuthService
@@ -48,3 +49,13 @@ async def register_admin(
 @router.get("/me")
 def get_profile(current_user: Annotated[dict, Depends(auth_guard)]) -> UserProfile:
     return current_user
+
+
+@router.patch("/me")
+async def update_profile(
+    user_data: UserProfileUpdate,
+    current_user: Annotated[dict, Depends(auth_guard)],
+    auth_service: UsersAuthService = Depends(get_auth_service),
+) -> UserProfile:
+    user = await auth_service.update_profile(current_user, user_data.name, user_data.email)
+    return UserProfile.model_validate(user)

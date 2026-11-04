@@ -58,6 +58,7 @@ async def get_by_window(
     max_price: Decimal | None = Query(None, gt=0, examples=[99.90]),
     offset: int = Query(0, ge=0),
     limit: int = Query(10, ge=1, le=100),
+    search: str | None = Query(None, min_length=1, max_length=100),
     products_service: ProductsService = Depends(get_products_service),
 ) -> PaginatedProduct:
     result = await products_service.get_by_category(
@@ -66,6 +67,7 @@ async def get_by_window(
         limit + 1,
         min_price,
         max_price,
+        search,
     )
     has_next = len(result) > limit
     products = list(result[:limit])

@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
@@ -19,6 +20,14 @@ SWAGGER_CSS = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger
 security_scheme = HTTPBearer(bearerFormat="JWT", auto_error=False)
 
 app = FastAPI(title="Ecommerce API", docs_url=None)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(v1_router, prefix="/api/v1", dependencies=[Depends(security_scheme)])
 

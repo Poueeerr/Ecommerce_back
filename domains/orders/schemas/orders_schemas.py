@@ -11,11 +11,22 @@ class _FromModel(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class OrderProduct(_FromModel):
+    id: uuid.UUID
+    product_name: str
+    product_type: str
+    product_price: Decimal
+    product_description: str
+    created_at: datetime
+    updated_at: datetime
+
+
 class OrderItem(_FromModel):
     id: uuid.UUID
     product_id: uuid.UUID
     quantity: int
     unit_price: Decimal
+    product: OrderProduct
 
 
 class Order(_FromModel):
@@ -26,6 +37,10 @@ class Order(_FromModel):
     order_items: list[OrderItem]
     created_at: datetime
     updated_at: datetime
+
+
+class OrderSummary(Order):
+    payment_status: str | None = None
 
 
 class CreateOrderItem(BaseModel):

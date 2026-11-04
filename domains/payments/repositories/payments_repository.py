@@ -33,6 +33,14 @@ class PaymentsRepository:
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def list_by_user(self, user_id: uuid.UUID) -> list[PaymentsModel]:
+        result = await self.db.execute(
+            select(PaymentsModel)
+            .where(PaymentsModel.user_id == user_id)
+            .order_by(PaymentsModel.created_at.desc())
+        )
+        return list(result.scalars().all())
+
     async def get_by_provider_payment_id(
         self,
         provider_payment_id: str,

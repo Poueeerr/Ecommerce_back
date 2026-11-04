@@ -1,6 +1,5 @@
 import asyncio
 import uuid
-
 from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from domains.orders.orders_enums import OrderStatus
 from domains.orders.repositories.orders_repository import OrdersRepository
 from domains.orders.schemas.event_schema import OrderCreatedEvent
-
 from domains.payments.adapters.mercadopago import MercadoPagoAdapter
 from domains.payments.models.payments_model import PaymentsModel
 from domains.payments.payments_enums import PaymentsStatus
@@ -282,12 +280,11 @@ class PaymentsService:
                 if order.status == OrderStatus.PAYMENT_PENDING:
                     order.status = OrderStatus.PROCESSING
 
-            elif new_status in (
-                PaymentsStatus.CANCELLED,
-                PaymentsStatus.REJECTED,
+            elif (
+                new_status in (PaymentsStatus.CANCELLED, PaymentsStatus.REJECTED)
+                and order.status == OrderStatus.PAYMENT_PENDING
             ):
-                if order.status == OrderStatus.PAYMENT_PENDING:
-                    order.status = OrderStatus.CANCELED
+                order.status = OrderStatus.CANCELED
 
     async def update_from_provider(
         self,

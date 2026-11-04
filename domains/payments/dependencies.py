@@ -6,6 +6,7 @@ from domains.orders.repositories.orders_repository import OrdersRepository
 from domains.payments.adapters.mercadopago import MercadoPagoAdapter
 from domains.payments.repositories.payments_repository import PaymentsRepository
 from domains.payments.services.payments_service import PaymentsService
+from domains.payments.services.user_payments_service import UserPaymentsService
 
 
 def get_payments_service(
@@ -21,3 +22,9 @@ def get_payments_service(
         orders_repository=orders_repository,
         payment_adapter=payment_adapter,
     )
+
+
+def get_user_payments_service(
+    session: AsyncSession = Depends(get_db),
+) -> UserPaymentsService:
+    return UserPaymentsService(PaymentsRepository(session))
